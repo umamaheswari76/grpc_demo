@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CustomerServiceClient interface {
 	Insert(ctx context.Context, in *Customer, opts ...grpc.CallOption) (*InsertCustomerResponse, error)
-	GetTask(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CustomerList, error)
+	GetCustomer(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CustomerList, error)
 }
 
 type customerServiceClient struct {
@@ -43,9 +43,9 @@ func (c *customerServiceClient) Insert(ctx context.Context, in *Customer, opts .
 	return out, nil
 }
 
-func (c *customerServiceClient) GetTask(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CustomerList, error) {
+func (c *customerServiceClient) GetCustomer(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*CustomerList, error) {
 	out := new(CustomerList)
-	err := c.cc.Invoke(ctx, "/customer.CustomerService/GetTask", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/customer.CustomerService/GetCustomer", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (c *customerServiceClient) GetTask(ctx context.Context, in *Empty, opts ...
 // for forward compatibility
 type CustomerServiceServer interface {
 	Insert(context.Context, *Customer) (*InsertCustomerResponse, error)
-	GetTask(context.Context, *Empty) (*CustomerList, error)
+	GetCustomer(context.Context, *Empty) (*CustomerList, error)
 	mustEmbedUnimplementedCustomerServiceServer()
 }
 
@@ -68,8 +68,8 @@ type UnimplementedCustomerServiceServer struct {
 func (UnimplementedCustomerServiceServer) Insert(context.Context, *Customer) (*InsertCustomerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Insert not implemented")
 }
-func (UnimplementedCustomerServiceServer) GetTask(context.Context, *Empty) (*CustomerList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTask not implemented")
+func (UnimplementedCustomerServiceServer) GetCustomer(context.Context, *Empty) (*CustomerList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCustomer not implemented")
 }
 func (UnimplementedCustomerServiceServer) mustEmbedUnimplementedCustomerServiceServer() {}
 
@@ -102,20 +102,20 @@ func _CustomerService_Insert_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CustomerService_GetTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _CustomerService_GetCustomer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CustomerServiceServer).GetTask(ctx, in)
+		return srv.(CustomerServiceServer).GetCustomer(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/customer.CustomerService/GetTask",
+		FullMethod: "/customer.CustomerService/GetCustomer",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CustomerServiceServer).GetTask(ctx, req.(*Empty))
+		return srv.(CustomerServiceServer).GetCustomer(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -132,8 +132,8 @@ var CustomerService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _CustomerService_Insert_Handler,
 		},
 		{
-			MethodName: "GetTask",
-			Handler:    _CustomerService_GetTask_Handler,
+			MethodName: "GetCustomer",
+			Handler:    _CustomerService_GetCustomer_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

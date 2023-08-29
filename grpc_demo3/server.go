@@ -1,11 +1,13 @@
 package main
 
 import (
+	constants "command-line-arguments/home/umamaheswari/Documents/uma/banking_api_golang/constants/index.go"
 	"context"
 	"fmt"
+	ct "grpc_demo3/customer"
 	"net"
 	"sync"
-	ct "grpc_demo3/customer"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc"
 )
@@ -27,22 +29,22 @@ func (s *server) Insert(ctx context.Context, req *ct.Customer) (*ct.InsertCustom
 	req.Accountid = ID
 	s.customers[ID] = req
 
-	return &ct.InsertCustomerResponse{accountid: ID}, nil
+	return &ct.InsertCustomerResponse{Accountid: ID}, nil
 
 	// return &tk.TaskResponse{
 	// 	Id: fmt.Sprintf("Task added %v",req.Id),
 	// }, nil
 }
 
-func (s *server) GetTask(ctx context.Context, req *tk.Empty) (*tk.TaskList, error) {
+func (s *server) GetCustomer(ctx context.Context, req *ct.Empty) (*ct.CustomerList, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	tasks := make([]*tk.Task, 0, len(s.tasks))
-	for _, task := range s.tasks {
-		tasks = append(tasks, task)
+	customers := make([]*ct.Customer, 0, len(s.customers))
+	for _, task := range s.customers {
+		customers = append(customers, task)
 	}
-	return &tk.TaskList{Tasks: tasks}, nil
+	return &ct.CustomerList{Customers: customers}, nil
 	// return &tk.TaskList{
 	// 	Tasks: for _, val range Task,
 	// }
@@ -55,18 +57,19 @@ func generateID() string {
 }
 
 func main() {
-	lis, err := net.Listen("tcp", ":50055")
+	
+	lis, err := net.Listen("tcp", constants.Port)
 	if err != nil {
 		fmt.Printf("Failed to listen: %v", err)
 		return
 	}
 
 	s := grpc.NewServer()
-	tk.RegisterTaskServiceServer(s, &server{
-		tasks: make(map[string]*tk.Task),
+	ct.RegisterCustomerServiceServer(s, &server{
+		customers: make(map[string]*ct.Customer),
 	})
 
-	fmt.Println("Server listening on: 50055")
+	fmt.Println("Server listening on: %v",constants.Port)
 	if err := s.Serve(lis); err != nil {
 		fmt.Printf("Failed to serve: %v", err)
 	}

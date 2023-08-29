@@ -6,6 +6,8 @@ https://grpc.io/docs/languages/go/quickstart/
 
 https://itnext.io/learning-go-mongodb-crud-with-grpc-98e425aeaae6
 
+https://codevoweb.com/golang-grpc-server-and-client-signup-user-verify-email/
+
 
 
 rpc - methods
